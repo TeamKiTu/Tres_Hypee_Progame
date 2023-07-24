@@ -1,6 +1,6 @@
 import './style/style.css';
+import "flowbite";
 import routes from './js/routes';
-import home from './js/home';
 import pageDetails from './js/pageDetails';
 import pageList from './js/pageList';
 
@@ -9,7 +9,6 @@ const callRoute = () => {
 
   const pathParts = hash.substring(1).split('/');
 
-  console.log(pathParts);
   const pageName = pathParts[0];
   const pageArgument = pathParts[1] || '';
   const pageFunction = routes[pageName];
