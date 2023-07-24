@@ -1,5 +1,4 @@
 import './style/style.css';
-import "flowbite";
 import routes from './js/routes';
 import pageDetails from './js/pageDetails';
 import pageList from './js/pageList';
