@@ -87,26 +87,35 @@ const pageList = (argument = '', maxDisplay = 9) => {
     };
 
     const fetchList = (url, argument) => {
-      const finalURL = argument ? `${url}&search=${argument}` : url;
+      const finalURL = argument ? `${url}&search=${argument}` : `${url}&dates=2024-01-01,2024-12-31&ordering=-rating&page_size=27`;
+      console.log(argument)
+      console.log(finalURL)
+      console.log('-------------')
       fetch(finalURL)
         .then((response) => response.json())
         .then((responseData) => {
           displayResults(responseData.results);
         });
     };
-    fetchList(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&dates=2024-01-01,2024-12-31&ordering=-rating&page_size=${pageSize}`, cleanedArgument);
+    fetchList(`https://api.rawg.io/api/games?key=${process.env.API_KEY}`, cleanedArgument);
 
     // when a user use the searchbar
     const searchGames = document.getElementById('submit');
     searchGames.addEventListener('click',(e) => {
       deleteAncientsResults();
       const ask = document.getElementById('default-search').value;
-      pageList(ask, maxDisplay);
+      pageList(ask, 9);
     });
-
+    window.addEventListener('keypress', function (e) {
+      const ask = document.getElementById('default-search').value;
+      if (e.key === 'Enter' && ask) {
+        console.log(ask)
+        deleteAncientsResults();
+        pageList(ask, 9);
+        }
+    });
     // when a user click on a card
     window.addEventListener('click',(e) => {
-      console.log(e.target)
       pageDetails('lalalalala');
     });
   };
