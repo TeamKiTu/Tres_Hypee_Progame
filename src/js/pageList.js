@@ -23,13 +23,13 @@ const pageList = (argument = '', maxDisplay = 9) => {
           div.innerHTML = `
             <article class="card_game w-full h-full bg-black">
               <a href="#">
-                <img class="rounded-t-lg" src="${image}" alt="" />
+                <img class="w-full h-48" src="${image}" alt="" />
               </a>
-              <div class="p-5">
+              <div>
                 <a href="#">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-white">${name}</h5>
+                <h5 class="mb-2 mt-2 text-2xl font-bold text-white">${name}</h5>
                 </a>
-                <div id="platforms${i}" class="flex gap-4 pt-3"></div>
+                <div id="platforms${i}" class="flex gap-4 pt-2"></div>
               </div>
             </article>
           `
@@ -63,7 +63,7 @@ const pageList = (argument = '', maxDisplay = 9) => {
             <p>lalala</p>
             <div class="p-5">
               <a href="#">
-              <h5 class="text-2xl font-bold tracking-tight text-gray-900">Mon cul sur la</h5>
+              <h5 class="text-2xl font-bold tracking-tight text-white">Mon cul sur la</h5>
               </a>
             </div>
           </article>
