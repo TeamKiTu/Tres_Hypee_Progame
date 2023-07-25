@@ -1,22 +1,28 @@
+import pageDetails from './pageDetails';
+
 const pageList = (argument = '', maxDisplay = 9) => {
   const pageSize = 27;
   const preparePage = () => {
     const cleanedArgument = argument.trim().replace(/\s+/g, '-');
 
-    const deleteAncientsGames = document.querySelectorAll('.deletable');
-    for(let i = 0; i < deleteAncientsGames.length; i++) {
-      deleteAncientsGames[i].remove();
+    const deleteAncientsResults = () => {
+      const deleteAncientsGames = document.querySelectorAll('.deletable');
+      for(let i = 0; i < deleteAncientsGames.length; i++) {
+        deleteAncientsGames[i].remove();
+      }
     }
+
+    deleteAncientsResults();
 
     const displayResults = (articles) => {
       for(let i = 0; i < maxDisplay ; i++) {
         // create a new card for each game
         const div = document.getElementById('pageContent').appendChild(document.createElement("div"));
-        div.setAttribute('id',`gameID${i}`)
+        div.setAttribute('id',articles[i].id)
         div.classList.add('deletable');
-        const addMovieElement = (div, name, image) => {
+        const addMovieElement = (div, name, image, id) => {
           div.innerHTML = `
-            <article class="hiding-class max-w max-h bg-indigo-500 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <article class="card_game max-w max-h bg-indigo-500 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               <a href="#">
                 <img class="rounded-t-lg" src="${image}" alt="" />
               </a>
@@ -38,42 +44,56 @@ const pageList = (argument = '', maxDisplay = 9) => {
             imagePlatform.classList.add('mr-2');
           }        
         }
-        addMovieElement(div, articles[i].name, articles[i].background_image);
 
-        // change the information when the mouse is over the card
-        const hoverGames = document.getElementById(`gameID${i}`);
+        if(articles[i].background_image === null) {
+          addMovieElement(div, articles[i].name, '#', articles[i].id);
+        } else {
+          addMovieElement(div, articles[i].name, articles[i].background_image, articles[i].id);
+        }
+
+        const hoverGames = document.getElementById(articles[i].id);
+        // change the information when the mouse is over the card then undo the changes when go out
         hoverGames.addEventListener('mouseenter',(e) => {
           e.preventDefault;
           div.innerHTML = `
-          <article class="hiding-class max-w max-h bg-indigo-500 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-            <a href="#">
-              <img class="rounded-t-lg" src="${articles[i].background_image}" alt="" />
-            </a>
+          <article class="card_game max-w max-h bg-indigo-500 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <p>lalalala</p>
             <div class="p-5">
-              <a href="#">
               <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">${articles[i].name}</h5>
-              </a>
               <div>Test entrée</div>
             </div>
           </article>
         `
         });
+        
         hoverGames.addEventListener('mouseout',(e) => {
-          div.innerHTML = `
-          <article class="hiding-class max-w max-h bg-indigo-500 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-            <a href="#">
-              <img class="rounded-t-lg" src="${articles[i].background_image}" alt="" />
-            </a>
-            <div class="p-5">
+          console.log(e.target)
+          if(e.target === hoverGames) {
+            div.innerHTML = `
+            <article class="card_game max-w max-h bg-indigo-500 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               <a href="#">
-              <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">${articles[i].name}</h5>
+                <img class="rounded-t-lg" src="${articles[i].background_image}" alt="" />
               </a>
-              <div>Test sortie</div>
-            </div>
-          </article>
-        `
-        });
+              <div class="p-5">
+                <a href="#">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">${articles[i].name}</h5>
+                </a>
+                <div>Test sortie</div>
+              </div>
+            </article>
+            `
+          }
+        });    
       };
+      const button = document.getElementById('pageContent').parentNode.appendChild(document.createElement("button"));
+      button.innerHTML = "Voir plus";
+      button.setAttribute('type', 'button');
+      button.classList.add('deletable', 'bg-blue-500', 'hover:bg-blue-700', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded');
+
+      button.addEventListener('click', (e) => {
+        maxDisplay += 9;
+        pageList('', maxDisplay);
+      })
     };
 
     const fetchList = (url, argument) => {
@@ -84,8 +104,21 @@ const pageList = (argument = '', maxDisplay = 9) => {
           displayResults(responseData.results);
         });
     };
+    fetchList(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&dates=2024-01-01,2024-12-31&ordering=-rating&page_size=${pageSize}`, cleanedArgument);
 
-    fetchList(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&dates=2024-01-01,2024-12-31&ordering=-rating&page_size=27`, cleanedArgument);
+    // when a user use the searchbar
+    const searchGames = document.getElementById('submit');
+    searchGames.addEventListener('click',(e) => {
+      deleteAncientsResults();
+      const ask = document.getElementById('default-search').value;
+      pageList(ask, maxDisplay);
+    });
+
+    // when a user click on a card
+    window.addEventListener('click',(e) => {
+      console.log(e.target)
+      pageDetails('lalalalala');
+    });
   };
 
   const render = () => {
