@@ -18,18 +18,18 @@ const pageList = (argument = '', maxDisplay = 9) => {
         // create a new card for each game
         const div = document.getElementById('pageContent').appendChild(document.createElement("div"));
         div.setAttribute('id',articles[i].id)
-        div.classList.add('deletable', 'p-2.5', 'w-96', 'h-96');
+        div.classList.add('deletable', 'flex', 'justify-between','p-2.5', 'w-full', 'h-full');
         const addMovieElement = (div, name, image, id) => {
           div.innerHTML = `
-            <article class="card_game w-full h-full bg-indigo-500 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <article class="card_game w-full h-full bg-black">
               <a href="#">
                 <img class="rounded-t-lg" src="${image}" alt="" />
               </a>
               <div class="p-5">
                 <a href="#">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">${name}</h5>
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-white">${name}</h5>
                 </a>
-                <div id="platforms${i}" class="flex"></div>
+                <div id="platforms${i}" class="flex gap-4 pt-3"></div>
               </div>
             </article>
           `
@@ -43,7 +43,6 @@ const pageList = (argument = '', maxDisplay = 9) => {
                 imagePlatform.setAttribute('src',`../src/assets/images/${platforms[u].platform.slug}.svg`);
                 imagePlatform.setAttribute('alt',`logo ${platforms[u].platform.slug}`);
                 imagePlatform.setAttribute('title',`${platforms[u].platform.slug}`);
-                imagePlatform.classList.add('mr-2');
                 tempPlatforms+= `${platforms[u].platform.slug} `;
               }
             }
@@ -60,11 +59,11 @@ const pageList = (argument = '', maxDisplay = 9) => {
         const initialInnerHTML = hoverGames.innerHTML
         hoverGames.addEventListener('mouseenter',(e) => {
           hoverGames.innerHTML = `
-          <article class="card_game w-full h-full bg-indigo-500 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+          <article class="card_game w-full h-full bg-black">
             <p>lalala</p>
             <div class="p-5">
               <a href="#">
-              <h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Mon cul sur la</h5>
+              <h5 class="text-2xl font-bold tracking-tight text-gray-900">Mon cul sur la</h5>
               </a>
             </div>
           </article>
@@ -77,10 +76,9 @@ const pageList = (argument = '', maxDisplay = 9) => {
           }
         });    
       };
-      const button = document.getElementById('pageContent').parentNode.appendChild(document.createElement("button"));
-      button.innerHTML = "Voir plus";
-      button.setAttribute('type', 'button');
-      button.classList.add('deletable', 'bg-blue-500', 'hover:bg-blue-700', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded');
+      const button = document.getElementById('pageContent').parentNode.appendChild(document.createElement("div"));
+      button.innerHTML = "<button type='button' class='deletable bg-red text-white font-bold w-48 h-12 text-xl'>Show more</button>";
+      button.classList.add('flex', 'justify-center', 'pt-10', 'pb-10');
 
       button.addEventListener('click', (e) => {
         maxDisplay += 9;
