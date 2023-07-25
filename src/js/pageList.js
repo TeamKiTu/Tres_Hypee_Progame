@@ -11,7 +11,6 @@ const pageList = (argument = '', maxDisplay = 9) => {
         deleteAncientsGames[i].remove();
       }
     }
-
     deleteAncientsResults();
 
     const displayResults = (articles) => {
@@ -19,10 +18,10 @@ const pageList = (argument = '', maxDisplay = 9) => {
         // create a new card for each game
         const div = document.getElementById('pageContent').appendChild(document.createElement("div"));
         div.setAttribute('id',articles[i].id)
-        div.classList.add('deletable');
+        div.classList.add('deletable', 'p-2.5', 'w-96', 'h-96');
         const addMovieElement = (div, name, image, id) => {
           div.innerHTML = `
-            <article class="card_game max-w max-h bg-indigo-500 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <article class="card_game w-full h-full bg-indigo-500 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               <a href="#">
                 <img class="rounded-t-lg" src="${image}" alt="" />
               </a>
@@ -35,53 +34,46 @@ const pageList = (argument = '', maxDisplay = 9) => {
             </article>
           `
           // display symbol of each platform supporting the game
+          let tempPlatforms = '';
           const platforms = articles[i].platforms;
-          for(let u = 0; u < platforms.length ; u++) {
-            const imagePlatform = document.getElementById(`platforms${i}`).appendChild(document.createElement("img"));
-            imagePlatform.setAttribute('src',`../src/assets/images/${platforms[u].platform.slug}.svg`);
-            imagePlatform.setAttribute('alt',`logo ${platforms[u].platform.slug}`);
-            imagePlatform.setAttribute('title',`${platforms[u].platform.slug}`);
-            imagePlatform.classList.add('mr-2');
-          }        
+          if (platforms != null) {
+            for (let u = 0; u < platforms.length ; u++) {
+              if (!tempPlatforms.includes("playstation") || !tempPlatforms.includes("xbox")) {
+                const imagePlatform = document.getElementById(`platforms${i}`).appendChild(document.createElement("img"));
+                imagePlatform.setAttribute('src',`../src/assets/images/${platforms[u].platform.slug}.svg`);
+                imagePlatform.setAttribute('alt',`logo ${platforms[u].platform.slug}`);
+                imagePlatform.setAttribute('title',`${platforms[u].platform.slug}`);
+                imagePlatform.classList.add('mr-2');
+                tempPlatforms+= `${platforms[u].platform.slug} `;
+              }
+            }
+          }      
         }
-
         if(articles[i].background_image === null) {
-          addMovieElement(div, articles[i].name, '#', articles[i].id);
+          const background_image = `../src/assets/images/comingsoon.svg`;
+          addMovieElement(div, articles[i].name, background_image, articles[i].id);
         } else {
           addMovieElement(div, articles[i].name, articles[i].background_image, articles[i].id);
         }
-
+        //change the information when the mouse is over the card then undo the changes when go out
         const hoverGames = document.getElementById(articles[i].id);
-        // change the information when the mouse is over the card then undo the changes when go out
+        const initialInnerHTML = hoverGames.innerHTML
         hoverGames.addEventListener('mouseenter',(e) => {
-          e.preventDefault;
-          div.innerHTML = `
-          <article class="card_game max-w max-h bg-indigo-500 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-            <p>lalalala</p>
+          hoverGames.innerHTML = `
+          <article class="card_game w-full h-full bg-indigo-500 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <p>lalala</p>
             <div class="p-5">
-              <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">${articles[i].name}</h5>
-              <div>Test entrée</div>
+              <a href="#">
+              <h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Mon cul sur la</h5>
+              </a>
             </div>
           </article>
         `
         });
         
-        hoverGames.addEventListener('mouseout',(e) => {
-          console.log(e.target)
-          if(e.target === hoverGames) {
-            div.innerHTML = `
-            <article class="card_game max-w max-h bg-indigo-500 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-              <a href="#">
-                <img class="rounded-t-lg" src="${articles[i].background_image}" alt="" />
-              </a>
-              <div class="p-5">
-                <a href="#">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">${articles[i].name}</h5>
-                </a>
-                <div>Test sortie</div>
-              </div>
-            </article>
-            `
+        hoverGames.addEventListener('mouseleave',(e) => {
+          if(e.target === hoverGames){
+            hoverGames.innerHTML = initialInnerHTML;
           }
         });    
       };
@@ -127,10 +119,8 @@ const pageList = (argument = '', maxDisplay = 9) => {
         Loading...
       </section>
     `;
-
     preparePage();
   };
-
   render();
 };
 
