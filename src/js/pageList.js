@@ -88,9 +88,7 @@ const pageList = (argument = '', maxDisplay = 9) => {
 
     const fetchList = (url, argument) => {
       const finalURL = argument ? `${url}&search=${argument}` : `${url}&dates=2024-01-01,2024-12-31&ordering=-rating&page_size=27`;
-      console.log(argument)
-      console.log(finalURL)
-      console.log('-------------')
+
       fetch(finalURL)
         .then((response) => response.json())
         .then((responseData) => {
@@ -101,9 +99,11 @@ const pageList = (argument = '', maxDisplay = 9) => {
 
     // when a user use the searchbar
     const searchGames = document.getElementById('submit');
+    const input = document.getElementById('default-search');
     searchGames.addEventListener('click',(e) => {
       deleteAncientsResults();
-      const ask = document.getElementById('default-search').value;
+      const ask = input.value;
+      console.log(ask)
       pageList(ask, 9);
     });
     window.addEventListener('keypress', function (e) {
