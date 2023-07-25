@@ -5,3 +5,19 @@
 .card_game:hover {
   cursor:pointer;
 }
+
+.bg-black {
+  background-color: #191919 !important;
+}
+
+.text-red {
+  color: #D20A32;
+}
+
+.bg-red {
+  background-color: #D20A32;
+}
+
+.text-grey {
+  color: #696969;
+}
