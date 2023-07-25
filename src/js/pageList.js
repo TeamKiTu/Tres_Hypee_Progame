@@ -1,5 +1,7 @@
 import pageDetails from './pageDetails';
 
+let isFetched = 0;
+
 const pageList = (argument = '', maxDisplay = 9) => {
   const pageSize = 27;
   const preparePage = () => {
@@ -87,6 +89,7 @@ const pageList = (argument = '', maxDisplay = 9) => {
     };
 
     const fetchList = (url, argument) => {
+      isFetched++;
       const finalURL = argument ? `${url}&search=${argument}` : `${url}&dates=2024-01-01,2024-12-31&ordering=-rating&page_size=27`;
 
       fetch(finalURL)
@@ -95,7 +98,9 @@ const pageList = (argument = '', maxDisplay = 9) => {
           displayResults(responseData.results);
         });
     };
+    
     fetchList(`https://api.rawg.io/api/games?key=${process.env.API_KEY}`, cleanedArgument);
+    console.log(isFetched);
 
     // when a user use the searchbar
     const searchGames = document.getElementById('submit');
