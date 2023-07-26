@@ -1,7 +1,7 @@
 import pageDetails from './pageDetails';
 
-const pageList = (argument = '', maxDisplay = 9) => {
-  const pageSize = 27;
+const pageList = (argument = '') => {
+  let buttonShow = 0;
   const preparePage = () => {
     const cleanedArgument = argument.trim().replace(/\s+/g, '-');
 
@@ -14,16 +14,16 @@ const pageList = (argument = '', maxDisplay = 9) => {
     deleteAncientsResults();
 
     const displayResults = (articles) => {
-      for(let i = 0; i < maxDisplay ; i++) {
+      for(let i = 0; i < articles.length ; i++) {
         // create a new card for each game
         const div = document.getElementById('pageContent').appendChild(document.createElement("div"));
         div.setAttribute('id',articles[i].id)
-        div.classList.add('deletable', 'flex', 'justify-between','p-2.5', 'w-full', 'h-full');
+        div.classList.add('deletable', 'hidden', 'justify-between','p-2.5', 'w-full', 'h-full');
         const addMovieElement = (div, name, image, id) => {
           div.innerHTML = `
             <article class="card_game w-full h-full bg-black">
               <a href="#">
-                <img class="w-full h-48" src="${image}" alt="" />
+                <img class="w-full" src="${image}" alt="" />
               </a>
               <div>
                 <a href="#">
@@ -76,14 +76,29 @@ const pageList = (argument = '', maxDisplay = 9) => {
           }
         });    
       };
-      const button = document.getElementById('pageContent').parentNode.appendChild(document.createElement("div"));
-      button.innerHTML = "<button type='button' class='deletable bg-red text-white font-bold w-48 h-12 text-xl'>Show more</button>";
-      button.classList.add('flex', 'justify-center', 'pt-10', 'pb-10');
+      const showCards = () => {
+        buttonShow++;
+        const hiddenCards = document.querySelectorAll('.hidden');
+        for (let x = -1; x < 9; ++x) {
+          if (hiddenCards[x]) {;
+            hiddenCards[x].classList.remove('hidden');
+            hiddenCards[x].classList.add('flex');
+          }
+        }
+        if (buttonShow >= 3) {
+          document.getElementById('showbutton').classList.add('hidden');
+        }
+      }
+      showCards();
+      if (buttonShow < 3) {
+        const button = document.getElementById('pageContent').parentNode.appendChild(document.createElement("div"));
+        button.innerHTML = "<button id='showbutton' type='button' class='deletable bg-red text-white font-bold w-48 h-12 text-xl'>Show more</button>";
+        button.classList.add('flex', 'justify-center', 'pt-10', 'pb-10');
 
-      button.addEventListener('click', (e) => {
-        maxDisplay += 9;
-        pageList('', maxDisplay);
-      })
+        button.addEventListener('click', (e) => {
+          showCards();
+        })
+      } 
     };
 
     const fetchList = (url, argument) => {
@@ -104,14 +119,14 @@ const pageList = (argument = '', maxDisplay = 9) => {
       deleteAncientsResults();
       const ask = input.value;
       console.log(ask)
-      pageList(ask, 9);
+      pageList(ask);
     });
     window.addEventListener('keypress', function (e) {
       const ask = document.getElementById('default-search').value;
       if (e.key === 'Enter' && ask) {
         console.log(ask)
         deleteAncientsResults();
-        pageList(ask, 9);
+        pageList(ask);
         }
     });
     // when a user click on a card
