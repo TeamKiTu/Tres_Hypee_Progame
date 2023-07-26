@@ -19,11 +19,20 @@ const pageList = (argument = '') => {
         const div = document.getElementById('pageContent').appendChild(document.createElement("div"));
         div.setAttribute('id',articles[i].id)
         div.classList.add('deletable', 'hidden', 'justify-between','p-2.5', 'w-full', 'h-full');
+        let dev = '';
+        fetch(`https://api.rawg.io/api/games/${articles[i].slug}?key=${process.env.API_KEY}`)
+        .then((response) => response.json())
+        .then((responseData) => { 
+          if (responseData.developers.length != 0) {
+            dev = responseData.developers[0].name;
+          }        
+        });
+
         const addMovieElement = (div, name, image, id) => {
           div.innerHTML = `
-            <article class="card_game w-full h-full bg-black">
+            <article class="cardGame w-full h-full bg-black">
               <a href="#">
-                <img class="w-full" src="${image}" alt="" />
+                <img class="w-full imgBg" src="${image}" alt="" />
               </a>
               <div>
                 <a href="#">
@@ -56,19 +65,56 @@ const pageList = (argument = '') => {
         }
         //change the information when the mouse is over the card then undo the changes when go out
         const hoverGames = document.getElementById(articles[i].id);
-        const initialInnerHTML = hoverGames.innerHTML
-        hoverGames.addEventListener('mouseenter',(e) => {
-          hoverGames.innerHTML = `
-          <article class="card_game w-full h-full bg-black">
-            <p>lalala</p>
-            <div class="p-5">
-              <a href="#">
-              <h5 class="text-2xl font-bold tracking-tight text-white">Mon cul sur la</h5>
-              </a>
-            </div>
-          </article>
-        `
-        });
+        console.log(hoverGames)
+        const initialInnerHTML = hoverGames.innerHTML;
+        const moment = require('moment');
+        const releasedDate = articles[i].released;
+        const dateFormatee = moment(releasedDate).format('ll');
+        const tagsArray = articles[i].tags;
+        console.log(articles[i]);
+        if (tagsArray) {
+          let tagsList = '';
+          tagsArray.forEach((tag, index) => {
+            if (tag.language == 'eng') {
+            tagsList += `${tag.name}`;
+            index < tagsArray.length-1 ? tagsList+= ', ' : tagsList+= '';
+            }
+          });
+          hoverGames.addEventListener('mouseenter', (e) => {
+            let rating = ''
+            if (articles[i].ratings_count == 0) {
+              rating = "no votes";
+            } else {
+              rating = articles[i].rating + '/5 ' + ' - ' + articles[i].ratings_count + ' votes';
+            }
+            hoverGames.innerHTML = `
+              <article class="card_game w-full h-full bg-black">
+                <div class="p-5">
+                  <a href="#">
+                  <p class="text-xl font-thin text-white">${dateFormatee}</p>
+                  <p class="text-xl mt-3 font-thin text-white">${dev}</p>
+                  <p class="text-xl mt-3 font-thin text-white">${rating}</p>
+                  <p class="text-xl mt-3 font-thin text-white">${tagsList}</p>
+                  </a>
+                </div>
+              </article>
+            `;
+          });
+        } else {
+          hoverGames.addEventListener('mouseenter', (e) => {
+            hoverGames.innerHTML = `
+              <article class="card_game w-full h-full bg-black">
+                <div class="p-5">
+                  <a href="#">
+                  <p class="text-xl font-thin text-white">${dateFormatee}</p>
+                  <p class="text-xl mt-3 font-thin text-white">${dev}</p>
+                  <p class="text-xl mt-3 font-thin text-white">${articles[i].rating}/${articles[i].rating_top} - ${articles[i].ratings_count} votes</p>
+                  </a>
+                </div>
+              </article>
+            `;
+          });
+        }
         
         hoverGames.addEventListener('mouseleave',(e) => {
           if(e.target === hoverGames){
