@@ -1,10 +1,12 @@
 import pageDetails from './pageDetails';
+import routes from './routes';
 
 const pageList = (argument = '') => {
   let buttonShow = 0;
   const preparePage = () => {
     const cleanedArgument = argument.trim().replace(/\s+/g, '-');
 
+    // clear all previous cards on page
     const deleteAncientsResults = () => {
       const deleteAncientsGames = document.querySelectorAll('.deletable');
       for(let i = 0; i < deleteAncientsGames.length; i++) {
@@ -28,23 +30,18 @@ const pageList = (argument = '') => {
           }        
         });
 
-        const addMovieElement = (div, name, image, slug) => {
-          console.log(slug)
+        const addGameElement = (div, name, image, slug) => {
           div.innerHTML = `
             <article class="cardGame w-full h-full bg-black" name="${slug}">
-            <div class="headerCard">
-              <a href="#">
-                <img class="w-full imgBg" src="${image}" alt="" />
-                <p class="text-xl font-thin text-white pdate"></p>
-                <p class="text-xl mt-3 font-thin text-white pdev"></p>
-                <p class="text-xl mt-3 font-thin text-white prating"></p>
-                <p class="text-xl mt-3 font-thin text-white ptags"></p>
-              </a>
+            <div class="h-80 headerCard">
+              <img class="w-full h-72 imgBg" src="${image}" alt="" />
+              <p class="text-xl font-thin text-white pdate"></p>
+              <p class="text-xl mt-3 font-thin text-white pdev"></p>
+              <p class="text-xl mt-3 font-thin text-white prating"></p>
+              <p class="text-xl mt-3 font-thin text-white ptags"></p>
             </div>
               <div class="cardContent">
-                <a href="#">
                 <h5 class="mb-2 mt-2 text-2xl font-bold text-white">${name}</h5>
-                </a>
                 <div id="platforms${i}" class="flex gap-4 pt-2"></div>
               </div>
             </article>
@@ -64,21 +61,23 @@ const pageList = (argument = '') => {
             }
           }      
         }
+
+        // set the background image
         if(articles[i].background_image === null) {
           const background_image = `../src/assets/images/comingsoon.svg`;
-          addMovieElement(div, articles[i].name, background_image, articles[i].slug);
+          addGameElement(div, articles[i].name, background_image, articles[i].slug);
         } else {
-          addMovieElement(div, articles[i].name, articles[i].background_image, articles[i].slug);
+          addGameElement(div, articles[i].name, articles[i].background_image, articles[i].slug);
         }
-        //change the information when the mouse is over the card then undo the changes when go out
+
         const hoverGames = document.getElementById(articles[i].id);
-        console.log(hoverGames)
         const initialInnerHTML = hoverGames.innerHTML;
         const moment = require('moment');
         const releasedDate = articles[i].released;
         const dateFormatee = moment(releasedDate).format('ll');
         const tagsArray = articles[i].tags;
-        console.log(articles[i]);
+
+        // change the information when the mouse is over the card then undo the changes when go out
         if (tagsArray) {
           let tagsList = '';
           tagsArray.forEach((tag, index) => {
@@ -87,6 +86,7 @@ const pageList = (argument = '') => {
             index < tagsArray.length-1 ? tagsList+= ', ' : tagsList+= '';
             }
           });
+
           hoverGames.addEventListener('mouseenter', (e) => {
             let rating = ''
             if (articles[i].ratings_count == 0) {
@@ -104,13 +104,11 @@ const pageList = (argument = '') => {
         } else {
           hoverGames.addEventListener('mouseenter', (e) => {
             hoverGames.innerHTML = `
-              <article class="card_game w-full h-full bg-black">
+              <article class="card_game h-72 bg-black">
                 <div class="p-5">
-                  <a href="#">
                   <p class="text-xl font-thin text-white">${dateFormatee}</p>
                   <p class="text-xl mt-3 font-thin text-white">${dev}</p>
                   <p class="text-xl mt-3 font-thin text-white">${articles[i].rating}/${articles[i].rating_top} - ${articles[i].ratings_count} votes</p>
-                  </a>
                 </div>
               </article>
             `;
@@ -121,8 +119,10 @@ const pageList = (argument = '') => {
           if(e.target === hoverGames){
             hoverGames.innerHTML = initialInnerHTML;
           }
-        });    
+        });
       };
+
+      // generate all cards and make them disabled at first
       const showCards = () => {
         buttonShow++;
         const hiddenCards = document.querySelectorAll('.hidden');
@@ -137,6 +137,8 @@ const pageList = (argument = '') => {
         }
       }
       showCards();
+
+      // make cards active
       if (buttonShow < 3) {
         const button = document.getElementById('pageContent').parentNode.appendChild(document.createElement("div"));
         button.innerHTML = "<button id='showbutton' type='button' class='deletable bg-red text-white font-bold w-48 h-12 text-xl'>Show more</button>";
@@ -165,20 +167,14 @@ const pageList = (argument = '') => {
     searchGames.addEventListener('click',(e) => {
       deleteAncientsResults();
       const ask = input.value;
-      console.log(ask)
       pageList(ask);
     });
     window.addEventListener('keypress', function (e) {
       const ask = document.getElementById('default-search').value;
       if (e.key === 'Enter' && ask) {
-        console.log(ask)
         deleteAncientsResults();
         pageList(ask);
         }
-    });
-    // when a user click on a card
-    window.addEventListener('click',(e) => {
-      pageDetails('lalalalala');
     });
   };
 
