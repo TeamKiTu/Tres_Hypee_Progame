@@ -1,10 +1,12 @@
 import pageDetails from './pageDetails';
+import routes from './routes';
 
 const pageList = (argument = '') => {
   let buttonShow = 0;
   const preparePage = () => {
     const cleanedArgument = argument.trim().replace(/\s+/g, '-');
 
+    // clear all previous cards on page
     const deleteAncientsResults = () => {
       const deleteAncientsGames = document.querySelectorAll('.deletable');
       for(let i = 0; i < deleteAncientsGames.length; i++) {
@@ -59,19 +61,23 @@ const pageList = (argument = '') => {
             }
           }      
         }
+
+        // set the background image
         if(articles[i].background_image === null) {
           const background_image = `../src/assets/images/comingsoon.svg`;
-          addMovieElement(div, articles[i].name, background_image, articles[i].slug);
+          addGameElement(div, articles[i].name, background_image, articles[i].slug);
         } else {
-          addMovieElement(div, articles[i].name, articles[i].background_image, articles[i].slug);
+          addGameElement(div, articles[i].name, articles[i].background_image, articles[i].slug);
         }
-        //change the information when the mouse is over the card then undo the changes when go out
+
         const hoverGames = document.getElementById(articles[i].id);
         const initialInnerHTML = hoverGames.innerHTML;
         const moment = require('moment');
         const releasedDate = articles[i].released;
         const dateFormatee = moment(releasedDate).format('ll');
         const tagsArray = articles[i].tags;
+
+        // change the information when the mouse is over the card then undo the changes when go out
         if (tagsArray) {
           let tagsList = '';
           tagsArray.forEach((tag, index) => {
@@ -80,6 +86,7 @@ const pageList = (argument = '') => {
             index < tagsArray.length-1 ? tagsList+= ', ' : tagsList+= '';
             }
           });
+
           hoverGames.addEventListener('mouseenter', (e) => {
             let rating = ''
             if (articles[i].ratings_count == 0) {
@@ -116,10 +123,14 @@ const pageList = (argument = '') => {
             hoverGames.innerHTML = initialInnerHTML;
           }
         });
+
         hoverGames.addEventListener('click',(e) => {
           window.location = `#pagedetail/${articles[i].slug}`;
         });    
+
       };
+
+      // generate all cards and make them disabled at first
       const showCards = () => {
         buttonShow++;
         const hiddenCards = document.querySelectorAll('.hidden');
@@ -134,6 +145,8 @@ const pageList = (argument = '') => {
         }
       }
       showCards();
+
+      // make cards active
       if (buttonShow < 3) {
         const button = document.getElementById('pageContent').parentNode.appendChild(document.createElement("div"));
         button.innerHTML = "<button id='showbutton' type='button' class='deletable bg-red text-white font-bold w-48 h-12 text-xl'>Show more</button>";
