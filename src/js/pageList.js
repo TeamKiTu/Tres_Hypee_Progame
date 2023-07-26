@@ -1,4 +1,5 @@
 import pageDetails from './pageDetails';
+import routes from './routes';
 
 const pageList = (argument = '') => {
   let buttonShow = 0;
@@ -31,13 +32,9 @@ const pageList = (argument = '') => {
         const addMovieElement = (div, name, image, id) => {
           div.innerHTML = `
             <article class="cardGame w-full h-full bg-black">
-              <a href="#">
-                <img class="w-full imgBg" src="${image}" alt="" />
-              </a>
+              <img class="w-full imgBg" src="${image}" alt="" />
               <div>
-                <a href="#pagedetail/${articles[i].id}">
-                  <h5 class="mb-2 mt-2 text-2xl font-bold text-white">${name}</h5>
-                </a>
+                <h5 class="mb-2 mt-2 text-2xl font-bold text-white">${name}</h5>
                 <div id="platforms${i}" class="flex gap-4 pt-2"></div>
               </div>
             </article>
@@ -65,13 +62,12 @@ const pageList = (argument = '') => {
         }
         //change the information when the mouse is over the card then undo the changes when go out
         const hoverGames = document.getElementById(articles[i].id);
-        console.log(hoverGames)
         const initialInnerHTML = hoverGames.innerHTML;
         const moment = require('moment');
         const releasedDate = articles[i].released;
         const dateFormatee = moment(releasedDate).format('ll');
         const tagsArray = articles[i].tags;
-        console.log(articles[i]);
+
         if (tagsArray) {
           let tagsList = '';
           tagsArray.forEach((tag, index) => {
@@ -88,16 +84,16 @@ const pageList = (argument = '') => {
               rating = articles[i].rating + '/5 ' + ' - ' + articles[i].ratings_count + ' votes';
             }
             hoverGames.innerHTML = `
-              <article class="card_game w-full h-full bg-black">
-                <div class="p-5">
-                  <a href="#">
-                  <p class="text-xl font-thin text-white">${dateFormatee}</p>
-                  <p class="text-xl mt-3 font-thin text-white">${dev}</p>
-                  <p class="text-xl mt-3 font-thin text-white">${rating}</p>
-                  <p class="text-xl mt-3 font-thin text-white">${tagsList}</p>
-                  </a>
-                </div>
-              </article>
+              <a href="#pagedetail/${articles[i].id}">
+                <article class="card_game w-full h-full bg-black">
+                  <div class="p-5">
+                    <p class="text-xl font-thin text-white">${dateFormatee}</p>
+                    <p class="text-xl mt-3 font-thin text-white">${dev}</p>
+                    <p class="text-xl mt-3 font-thin text-white">${rating}</p>
+                    <p class="text-xl mt-3 font-thin text-white">${tagsList}</p>
+                  </div>
+                </article>
+              </a>
             `;
           });
         } else {
@@ -105,7 +101,6 @@ const pageList = (argument = '') => {
             hoverGames.innerHTML = `
               <article class="card_game w-full h-full bg-black">
                 <div class="p-5">
-                  <a href="#">
                   <p class="text-xl font-thin text-white">${dateFormatee}</p>
                   <p class="text-xl mt-3 font-thin text-white">${dev}</p>
                   <p class="text-xl mt-3 font-thin text-white">${articles[i].rating}/${articles[i].rating_top} - ${articles[i].ratings_count} votes</p>
@@ -115,6 +110,11 @@ const pageList = (argument = '') => {
             `;
           });
         }
+
+        // hoverGames.addEventListener('clic', (e) => {
+        //   console.log(articles[i].id);
+        //   window.location.href = `#pagedetail/${articles[i].id}`;
+        // });
         
         hoverGames.addEventListener('mouseleave',(e) => {
           if(e.target === hoverGames){
@@ -164,20 +164,14 @@ const pageList = (argument = '') => {
     searchGames.addEventListener('click',(e) => {
       deleteAncientsResults();
       const ask = input.value;
-      console.log(ask)
       pageList(ask);
     });
     window.addEventListener('keypress', function (e) {
       const ask = document.getElementById('default-search').value;
       if (e.key === 'Enter' && ask) {
-        console.log(ask)
         deleteAncientsResults();
         pageList(ask);
         }
-    });
-    // when a user click on a card
-    window.addEventListener('click',(e) => {
-      pageDetails('lalalalala');
     });
   };
 
