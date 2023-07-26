@@ -28,13 +28,20 @@ const pageList = (argument = '') => {
           }        
         });
 
-        const addMovieElement = (div, name, image, id) => {
+        const addMovieElement = (div, name, image, slug) => {
+          console.log(slug)
           div.innerHTML = `
-            <article class="cardGame w-full h-full bg-black">
+            <article class="cardGame w-full h-full bg-black" name="${slug}">
+            <div class="headerCard">
               <a href="#">
                 <img class="w-full imgBg" src="${image}" alt="" />
+                <p class="text-xl font-thin text-white pdate"></p>
+                <p class="text-xl mt-3 font-thin text-white pdev"></p>
+                <p class="text-xl mt-3 font-thin text-white prating"></p>
+                <p class="text-xl mt-3 font-thin text-white ptags"></p>
               </a>
-              <div>
+            </div>
+              <div class="cardContent">
                 <a href="#">
                 <h5 class="mb-2 mt-2 text-2xl font-bold text-white">${name}</h5>
                 </a>
@@ -59,9 +66,9 @@ const pageList = (argument = '') => {
         }
         if(articles[i].background_image === null) {
           const background_image = `../src/assets/images/comingsoon.svg`;
-          addMovieElement(div, articles[i].name, background_image, articles[i].id);
+          addMovieElement(div, articles[i].name, background_image, articles[i].slug);
         } else {
-          addMovieElement(div, articles[i].name, articles[i].background_image, articles[i].id);
+          addMovieElement(div, articles[i].name, articles[i].background_image, articles[i].slug);
         }
         //change the information when the mouse is over the card then undo the changes when go out
         const hoverGames = document.getElementById(articles[i].id);
@@ -87,18 +94,12 @@ const pageList = (argument = '') => {
             } else {
               rating = articles[i].rating + '/5 ' + ' - ' + articles[i].ratings_count + ' votes';
             }
-            hoverGames.innerHTML = `
-              <article class="card_game w-full h-full bg-black">
-                <div class="p-5">
-                  <a href="#">
-                  <p class="text-xl font-thin text-white">${dateFormatee}</p>
-                  <p class="text-xl mt-3 font-thin text-white">${dev}</p>
-                  <p class="text-xl mt-3 font-thin text-white">${rating}</p>
-                  <p class="text-xl mt-3 font-thin text-white">${tagsList}</p>
-                  </a>
-                </div>
-              </article>
-            `;
+            let card = document.getElementsByName(articles[i].slug)[0];
+            card.querySelector('.imgBg').classList.add('hidden')
+            card.querySelector('.pdate').textContent=dateFormatee;
+            card.querySelector('.pdev').textContent=dev;
+            card.querySelector('.prating').textContent=rating;
+            card.querySelector('.ptags').textContent=tagsList;
           });
         } else {
           hoverGames.addEventListener('mouseenter', (e) => {
