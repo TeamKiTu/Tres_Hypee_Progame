@@ -6,6 +6,11 @@ const pageList = (argument = '') => {
   const preparePage = () => {
     const cleanedArgument = argument.trim().replace(/\s+/g, '-');
 
+    const webDescription = document.querySelector(".webdescription");
+    if (webDescription.classList.contains("hidden")){
+      webDescription.classList.remove("hidden");
+    }
+
     // clear all previous cards on page
     const deleteAncientsResults = () => {
       const deleteAncientsGames = document.querySelectorAll('.deletable');
@@ -15,12 +20,16 @@ const pageList = (argument = '') => {
     }
     deleteAncientsResults();
 
+    const divPrincipal = document.getElementById('pageContent').appendChild(document.createElement("div"));
+    divPrincipal.setAttribute('id','principal');
+
     const displayResults = (articles) => {
       for(let i = 0; i < articles.length ; i++) {
         // create a new card for each game
-        const div = document.getElementById('pageContent').appendChild(document.createElement("div"));
-        div.setAttribute('id',articles[i].id)
-        div.classList.add('deletable', 'hidden', 'justify-between','p-2.5', 'w-full', 'h-full');
+        divPrincipal.classList.add('mt-10', 'grid', 'md:grid-cols-3', 'gap-4', 'items-center');
+        const div = document.getElementById('principal').appendChild(document.createElement("div"));
+        div.setAttribute('id',articles[i].id);
+        div.classList.add('principalCard', 'deletable', 'hidden', 'justify-between','p-2.5', 'w-full', 'h-full');
         let dev = '';
         fetch(`https://api.rawg.io/api/games/${articles[i].slug}?key=${process.env.API_KEY}`)
         .then((response) => response.json())
@@ -30,22 +39,23 @@ const pageList = (argument = '') => {
           }        
         });
 
-        const addMovieElement = (div, name, image, slug) => {
+        const addGameElement = (div, name, image, slug) => {
           div.innerHTML = `
             <article class="cardGame w-full h-full bg-black" name="${slug}">
-              <div class="headerCard">
-                  <img class="w-full h-80 imgBg" src="${image}" alt="" />
-                  <p class="text-xl font-thin text-white pdate"></p>
-                  <p class="text-xl mt-3 font-thin text-white pdev"></p>
-                  <p class="text-xl mt-3 font-thin text-white prating"></p>
-                  <p class="text-xl my-3 font-thin text-white ptags"></p>
-              </div>
+            <div class="h-80 headerCard">
+              <img class="w-full h-80 imgBg" src="${image}" alt="" />
+              <p class="text-xl font-thin text-white pdate"></p>
+              <p class="text-xl mt-3 font-thin text-white pdev"></p>
+              <p class="text-xl mt-3 font-thin text-white prating"></p>
+              <p class="text-xl mt-3 font-thin text-white ptags"></p>
+            </div>
               <div class="cardContent">
                 <h5 class="mb-2 mt-2 text-2xl font-bold text-white">${name}</h5>
                 <div id="platforms${i}" class="flex gap-4 pt-2"></div>
               </div>
             </article>
-          `;
+          `
+
           // display symbol of each platform supporting the game
           let tempPlatforms = '';
           const platforms = articles[i].platforms;
@@ -57,9 +67,9 @@ const pageList = (argument = '') => {
                 imagePlatform.setAttribute('alt',`logo ${platforms[u].platform.slug}`);
                 imagePlatform.setAttribute('title',`${platforms[u].platform.slug}`);
                 tempPlatforms+= `${platforms[u].platform.slug} `;
-              }
-            }
-          }      
+              };
+            };
+          };   
         }
 
         // set the background image
@@ -88,14 +98,14 @@ const pageList = (argument = '') => {
           });
 
           hoverGames.addEventListener('mouseenter', (e) => {
-            let rating = ''
+            let rating = '';
             if (articles[i].ratings_count == 0) {
               rating = "no votes";
             } else {
               rating = articles[i].rating + '/5 ' + ' - ' + articles[i].ratings_count + ' votes';
             }
             let card = document.getElementsByName(articles[i].slug)[0];
-            card.querySelector('.imgBg').classList.add('hidden')
+            card.querySelector('.imgBg').classList.add('hidden');
             card.querySelector('.pdate').textContent=dateFormatee;
             card.querySelector('.pdev').textContent=dev;
             card.querySelector('.prating').textContent=rating;
@@ -103,14 +113,14 @@ const pageList = (argument = '') => {
           });
         } else {
           hoverGames.addEventListener('mouseenter', (e) => {
-            let rating = ''
+            let rating = '';
             if (articles[i].ratings_count == 0) {
               rating = "no votes";
             } else {
               rating = articles[i].rating + '/5 ' + ' - ' + articles[i].ratings_count + ' votes';
             }
             let card = document.getElementsByName(articles[i].slug)[0];
-            card.querySelector('.imgBg').classList.add('hidden')
+            card.querySelector('.imgBg').classList.add('hidden');
             card.querySelector('.pdate').textContent=dateFormatee;
             card.querySelector('.pdev').textContent=dev;
             card.querySelector('.prating').textContent=rating;
@@ -133,26 +143,28 @@ const pageList = (argument = '') => {
       // generate all cards and make them disabled at first
       const showCards = () => {
         buttonShow++;
-        const hiddenCards = document.querySelectorAll('.hidden');
+        const hiddenCards = document.querySelectorAll('.hidden.principalCard');
+        console.log(hiddenCards)
         for (let x = -1; x < 9; ++x) {
-          if (hiddenCards[x]) {;
+          if (hiddenCards[x]) {
             hiddenCards[x].classList.remove('hidden');
             hiddenCards[x].classList.add('flex');
-          }
-        }
+            console.log(hiddenCards[x])
+          };
+        };
         if (buttonShow >= 3) {
           document.getElementById('showbutton').classList.add('hidden');
-        }
+        };
       }
       showCards();
 
       // make cards active
       if (buttonShow < 3) {
-        const button = document.getElementById('pageContent').parentNode.appendChild(document.createElement("div"));
-        button.innerHTML = "<button id='showbutton' type='button' class='deletable bg-red text-white font-bold w-48 h-12 text-xl'>Show more</button>";
-        button.classList.add('flex', 'justify-center', 'pt-10', 'pb-10');
-
-        button.addEventListener('click', (e) => {
+        const divButton = document.getElementById('pageContent').appendChild(document.createElement("div"));
+        divButton.innerHTML = "<button id='showbutton' type='button' class='deletable bg-red text-white font-bold w-48 h-12 text-xl'>Show more</button>";
+        divButton.classList.add('flex', 'justify-center', 'pt-10', 'pb-10');
+        const button = document.getElementById('showbutton');
+        button.addEventListener('click', () => {
           showCards();
         })
       } 
@@ -160,7 +172,6 @@ const pageList = (argument = '') => {
 
     const fetchList = (url, argument) => {
       const finalURL = argument ? `${url}&search=${argument}` : `${url}&dates=2024-01-01,2024-12-31&ordering=-rating&page_size=27`;
-
       fetch(finalURL)
         .then((response) => response.json())
         .then((responseData) => {
@@ -193,6 +204,7 @@ const pageList = (argument = '') => {
       </section>
     `;
     preparePage();
+    
   };
   render();
 };

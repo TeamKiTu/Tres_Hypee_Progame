@@ -11,7 +11,7 @@ const callRoute = () => {
   const pageFunction = routes[pageName];
   if (pageFunction !== undefined) {
     pageFunction(pageArgument);
-  }
+  };
 };
 
 window.addEventListener('hashchange', () => callRoute());
