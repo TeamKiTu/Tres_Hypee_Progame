@@ -30,22 +30,22 @@ const pageList = (argument = '') => {
           }        
         });
 
-        const addGameElement = (div, name, image, slug) => {
+        const addMovieElement = (div, name, image, slug) => {
           div.innerHTML = `
             <article class="cardGame w-full h-full bg-black" name="${slug}">
-            <div class="h-80 headerCard">
-              <img class="w-full h-72 imgBg" src="${image}" alt="" />
-              <p class="text-xl font-thin text-white pdate"></p>
-              <p class="text-xl mt-3 font-thin text-white pdev"></p>
-              <p class="text-xl mt-3 font-thin text-white prating"></p>
-              <p class="text-xl mt-3 font-thin text-white ptags"></p>
-            </div>
+              <div class="headerCard">
+                  <img class="w-full h-80 imgBg" src="${image}" alt="" />
+                  <p class="text-xl font-thin text-white pdate"></p>
+                  <p class="text-xl mt-3 font-thin text-white pdev"></p>
+                  <p class="text-xl mt-3 font-thin text-white prating"></p>
+                  <p class="text-xl my-3 font-thin text-white ptags"></p>
+              </div>
               <div class="cardContent">
                 <h5 class="mb-2 mt-2 text-2xl font-bold text-white">${name}</h5>
                 <div id="platforms${i}" class="flex gap-4 pt-2"></div>
               </div>
             </article>
-          `
+          `;
           // display symbol of each platform supporting the game
           let tempPlatforms = '';
           const platforms = articles[i].platforms;
@@ -103,15 +103,18 @@ const pageList = (argument = '') => {
           });
         } else {
           hoverGames.addEventListener('mouseenter', (e) => {
-            hoverGames.innerHTML = `
-              <article class="card_game h-72 bg-black">
-                <div class="p-5">
-                  <p class="text-xl font-thin text-white">${dateFormatee}</p>
-                  <p class="text-xl mt-3 font-thin text-white">${dev}</p>
-                  <p class="text-xl mt-3 font-thin text-white">${articles[i].rating}/${articles[i].rating_top} - ${articles[i].ratings_count} votes</p>
-                </div>
-              </article>
-            `;
+            let rating = ''
+            if (articles[i].ratings_count == 0) {
+              rating = "no votes";
+            } else {
+              rating = articles[i].rating + '/5 ' + ' - ' + articles[i].ratings_count + ' votes';
+            }
+            let card = document.getElementsByName(articles[i].slug)[0];
+            card.querySelector('.imgBg').classList.add('hidden')
+            card.querySelector('.pdate').textContent=dateFormatee;
+            card.querySelector('.pdev').textContent=dev;
+            card.querySelector('.prating').textContent=rating;
+            card.querySelector('.ptags').textContent=tagsList;
           });
         }
         
@@ -120,6 +123,11 @@ const pageList = (argument = '') => {
             hoverGames.innerHTML = initialInnerHTML;
           }
         });
+
+        hoverGames.addEventListener('click',(e) => {
+          window.location = `#pagedetail/${articles[i].slug}`;
+        });    
+
       };
 
       // generate all cards and make them disabled at first
