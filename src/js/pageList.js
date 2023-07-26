@@ -1,7 +1,7 @@
 import pageDetails from './pageDetails';
 
-const pageList = (argument = '', maxDisplay = 9) => {
-  const pageSize = 27;
+const pageList = (argument = '') => {
+  let buttonShow = 0;
   const preparePage = () => {
     const cleanedArgument = argument.trim().replace(/\s+/g, '-');
 
@@ -14,22 +14,22 @@ const pageList = (argument = '', maxDisplay = 9) => {
     deleteAncientsResults();
 
     const displayResults = (articles) => {
-      for(let i = 0; i < maxDisplay ; i++) {
+      for(let i = 0; i < articles.length ; i++) {
         // create a new card for each game
         const div = document.getElementById('pageContent').appendChild(document.createElement("div"));
         div.setAttribute('id',articles[i].id)
-        div.classList.add('deletable', 'flex', 'justify-between','p-2.5', 'w-full', 'h-full');
+        div.classList.add('deletable', 'hidden', 'justify-between','p-2.5', 'w-full', 'h-full');
         const addMovieElement = (div, name, image, id) => {
           div.innerHTML = `
             <article class="card_game w-full h-full bg-black">
               <a href="#">
-                <img class="rounded-t-lg" src="${image}" alt="" />
+                <img class="w-full" src="${image}" alt="" />
               </a>
-              <div class="p-5">
+              <div>
                 <a href="#">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-white">${name}</h5>
+                <h5 class="mb-2 mt-2 text-2xl font-bold text-white">${name}</h5>
                 </a>
-                <div id="platforms${i}" class="flex gap-4 pt-3"></div>
+                <div id="platforms${i}" class="flex gap-4 pt-2"></div>
               </div>
             </article>
           `
@@ -63,7 +63,7 @@ const pageList = (argument = '', maxDisplay = 9) => {
             <p>lalala</p>
             <div class="p-5">
               <a href="#">
-              <h5 class="text-2xl font-bold tracking-tight text-gray-900">Mon cul sur la</h5>
+              <h5 class="text-2xl font-bold tracking-tight text-white">Mon cul sur la</h5>
               </a>
             </div>
           </article>
@@ -76,14 +76,29 @@ const pageList = (argument = '', maxDisplay = 9) => {
           }
         });    
       };
-      const button = document.getElementById('pageContent').parentNode.appendChild(document.createElement("div"));
-      button.innerHTML = "<button type='button' class='deletable bg-red text-white font-bold w-48 h-12 text-xl'>Show more</button>";
-      button.classList.add('flex', 'justify-center', 'pt-10', 'pb-10');
+      const showCards = () => {
+        buttonShow++;
+        const hiddenCards = document.querySelectorAll('.hidden');
+        for (let x = -1; x < 9; ++x) {
+          if (hiddenCards[x]) {;
+            hiddenCards[x].classList.remove('hidden');
+            hiddenCards[x].classList.add('flex');
+          }
+        }
+        if (buttonShow >= 3) {
+          document.getElementById('showbutton').classList.add('hidden');
+        }
+      }
+      showCards();
+      if (buttonShow < 3) {
+        const button = document.getElementById('pageContent').parentNode.appendChild(document.createElement("div"));
+        button.innerHTML = "<button id='showbutton' type='button' class='deletable bg-red text-white font-bold w-48 h-12 text-xl'>Show more</button>";
+        button.classList.add('flex', 'justify-center', 'pt-10', 'pb-10');
 
-      button.addEventListener('click', (e) => {
-        maxDisplay += 9;
-        pageList('', maxDisplay);
-      })
+        button.addEventListener('click', (e) => {
+          showCards();
+        })
+      } 
     };
 
     const fetchList = (url, argument) => {
@@ -104,14 +119,14 @@ const pageList = (argument = '', maxDisplay = 9) => {
       deleteAncientsResults();
       const ask = input.value;
       console.log(ask)
-      pageList(ask, 9);
+      pageList(ask);
     });
     window.addEventListener('keypress', function (e) {
       const ask = document.getElementById('default-search').value;
       if (e.key === 'Enter' && ask) {
         console.log(ask)
         deleteAncientsResults();
-        pageList(ask, 9);
+        pageList(ask);
         }
     });
     // when a user click on a card
