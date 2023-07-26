@@ -22,12 +22,10 @@ const pageList = (argument = '') => {
         const addMovieElement = (div, name, image, id) => {
           div.innerHTML = `
             <article class="card_game w-full h-full bg-black">
-              <a href="#">
-                <img class="w-full" src="${image}" alt="" />
-              </a>
+              <img class="w-full" src="${image}" alt="" />
               <div>
-                <a href="#">
-                <h5 class="mb-2 mt-2 text-2xl font-bold text-white">${name}</h5>
+                <a href="#pagedetail/${articles[i].id}">
+                  <h5 class="mb-2 mt-2 text-2xl font-bold text-white">${name}</h5>
                 </a>
                 <div id="platforms${i}" class="flex gap-4 pt-2"></div>
               </div>
@@ -56,25 +54,23 @@ const pageList = (argument = '') => {
         }
         //change the information when the mouse is over the card then undo the changes when go out
         const hoverGames = document.getElementById(articles[i].id);
-        const initialInnerHTML = hoverGames.innerHTML
+        const initialInnerHTML = hoverGames.innerHTML;
         hoverGames.addEventListener('mouseenter',(e) => {
           hoverGames.innerHTML = `
-          <article class="card_game w-full h-full bg-black">
-            <p>lalala</p>
-            <div class="p-5">
-              <a href="#">
-              <h5 class="text-2xl font-bold tracking-tight text-white">Mon cul sur la</h5>
-              </a>
-            </div>
-          </article>
-        `
+            <article class="card_game w-full h-full bg-black">
+              <p>lalala</p>
+              <div class="p-5">
+                <h5 class="text-2xl font-bold tracking-tight text-white">Mon cul sur la</h5>
+              </div>
+            </article>
+          `
         });
         
         hoverGames.addEventListener('mouseleave',(e) => {
           if(e.target === hoverGames){
             hoverGames.innerHTML = initialInnerHTML;
           }
-        });    
+        });
       };
       const showCards = () => {
         buttonShow++;
