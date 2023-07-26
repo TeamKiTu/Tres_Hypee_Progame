@@ -6,6 +6,7 @@ const pageList = (argument = '') => {
   const preparePage = () => {
     const cleanedArgument = argument.trim().replace(/\s+/g, '-');
 
+    // clear all previous cards on page
     const deleteAncientsResults = () => {
       const deleteAncientsGames = document.querySelectorAll('.deletable');
       for(let i = 0; i < deleteAncientsGames.length; i++) {
@@ -32,8 +33,8 @@ const pageList = (argument = '') => {
         const addGameElement = (div, name, image, slug) => {
           div.innerHTML = `
             <article class="cardGame w-full h-full bg-black" name="${slug}">
-            <div class="headerCard">
-              <img class="w-full imgBg" src="${image}" alt="" />
+            <div class="h-80 headerCard">
+              <img class="w-full h-72 imgBg" src="${image}" alt="" />
               <p class="text-xl font-thin text-white pdate"></p>
               <p class="text-xl mt-3 font-thin text-white pdev"></p>
               <p class="text-xl mt-3 font-thin text-white prating"></p>
@@ -60,13 +61,15 @@ const pageList = (argument = '') => {
             }
           }      
         }
+
+        // set the background image
         if(articles[i].background_image === null) {
           const background_image = `../src/assets/images/comingsoon.svg`;
           addGameElement(div, articles[i].name, background_image, articles[i].slug);
         } else {
           addGameElement(div, articles[i].name, articles[i].background_image, articles[i].slug);
         }
-        //change the information when the mouse is over the card then undo the changes when go out
+
         const hoverGames = document.getElementById(articles[i].id);
         const initialInnerHTML = hoverGames.innerHTML;
         const moment = require('moment');
@@ -74,6 +77,7 @@ const pageList = (argument = '') => {
         const dateFormatee = moment(releasedDate).format('ll');
         const tagsArray = articles[i].tags;
 
+        // change the information when the mouse is over the card then undo the changes when go out
         if (tagsArray) {
           let tagsList = '';
           tagsArray.forEach((tag, index) => {
@@ -82,6 +86,7 @@ const pageList = (argument = '') => {
             index < tagsArray.length-1 ? tagsList+= ', ' : tagsList+= '';
             }
           });
+
           hoverGames.addEventListener('mouseenter', (e) => {
             let rating = ''
             if (articles[i].ratings_count == 0) {
@@ -99,7 +104,7 @@ const pageList = (argument = '') => {
         } else {
           hoverGames.addEventListener('mouseenter', (e) => {
             hoverGames.innerHTML = `
-              <article class="card_game w-full h-full bg-black">
+              <article class="card_game h-72 bg-black">
                 <div class="p-5">
                   <p class="text-xl font-thin text-white">${dateFormatee}</p>
                   <p class="text-xl mt-3 font-thin text-white">${dev}</p>
@@ -116,6 +121,8 @@ const pageList = (argument = '') => {
           }
         });
       };
+
+      // generate all cards and make them disabled at first
       const showCards = () => {
         buttonShow++;
         const hiddenCards = document.querySelectorAll('.hidden');
@@ -130,6 +137,8 @@ const pageList = (argument = '') => {
         }
       }
       showCards();
+
+      // make cards active
       if (buttonShow < 3) {
         const button = document.getElementById('pageContent').parentNode.appendChild(document.createElement("div"));
         button.innerHTML = "<button id='showbutton' type='button' class='deletable bg-red text-white font-bold w-48 h-12 text-xl'>Show more</button>";
