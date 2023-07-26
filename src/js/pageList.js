@@ -29,7 +29,6 @@ const pageList = (argument = '') => {
         });
 
         const addMovieElement = (div, name, image, slug) => {
-          console.log(slug)
           div.innerHTML = `
             <article class="cardGame w-full h-full bg-black" name="${slug}">
             <div class="headerCard">
@@ -72,13 +71,11 @@ const pageList = (argument = '') => {
         }
         //change the information when the mouse is over the card then undo the changes when go out
         const hoverGames = document.getElementById(articles[i].id);
-        console.log(hoverGames)
         const initialInnerHTML = hoverGames.innerHTML;
         const moment = require('moment');
         const releasedDate = articles[i].released;
         const dateFormatee = moment(releasedDate).format('ll');
         const tagsArray = articles[i].tags;
-        console.log(articles[i]);
         if (tagsArray) {
           let tagsList = '';
           tagsArray.forEach((tag, index) => {
@@ -165,13 +162,11 @@ const pageList = (argument = '') => {
     searchGames.addEventListener('click',(e) => {
       deleteAncientsResults();
       const ask = input.value;
-      console.log(ask)
       pageList(ask);
     });
     window.addEventListener('keypress', function (e) {
       const ask = document.getElementById('default-search').value;
       if (e.key === 'Enter' && ask) {
-        console.log(ask)
         deleteAncientsResults();
         pageList(ask);
         }
